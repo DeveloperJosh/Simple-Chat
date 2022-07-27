@@ -9,7 +9,6 @@ io.on("connection", (socket) => {
   socket.on('user', (name) => {
     users[socket.id] = name;
     /// tell the user to read the rules
-    socket.emit('message', 'Read the rules, do /rules');
     socket.broadcast.emit("message", `${name} joined the chat.`)
   });
 
