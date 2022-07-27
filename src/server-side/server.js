@@ -18,6 +18,9 @@ io.on("connection", (socket) => {
       const args = text.split(" ").slice(1);
       switch (command) {
         case "/userlist":
+          /// count the users 
+          const userCount = Object.keys(users).length;
+          socket.emit("message", `There is ${userCount}/90 users online.`);
           socket.emit("message", "Userlist: " + Object.values(users).join(", "));
           break;
         case "/nick":
@@ -40,7 +43,8 @@ io.on("connection", (socket) => {
           /// round out the milliseconds
           time = Math.round(time_taken);
           time = time / 1000;
-          socket.emit("message", `ping: ${time} ms`);
+          wait = time.toFixed(3);
+          socket.emit("message", `Pong! Took ${wait} seconds.`);
           break;
         case "/rules":
           socket.emit("message", `
@@ -52,7 +56,7 @@ io.on("connection", (socket) => {
           5. No advertising`);
           break;
         case "/help":
-          socket.emit("message", "Commands: /nick, /help, /userlist, /leave, /ping");
+          socket.emit("message", "Commands: /nick, /help, /userlist, /leave, /ping, /rules");
           break;
         default:
           socket.emit("message", "Unknown command.");
@@ -62,7 +66,7 @@ io.on("connection", (socket) => {
       if (users[socket.id]) {
         socket.broadcast.emit("message", `${users[socket.id]}: ${text}`);
       } else {
-        socket.emit("message", "You are not in the chat.");
+        socket.emit("message", "It looks something went wrong. Please reconnect.\nYou can type '/help' for a list of commands.");
       }
     }
   });
