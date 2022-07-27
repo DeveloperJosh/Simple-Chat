@@ -1,15 +1,18 @@
 const io = require("socket.io")();
+const config = require("../../config");
 
 const PORT = process.env.PORT || 3000;
 
 const users = {};
+const votes = {};
 
 io.on("connection", (socket) => {
   console.log("New Connection: " + socket.id);
+  console.log("-----------------------------------------------------");
   socket.on('user', (name) => {
     users[socket.id] = name;
     /// tell the user to read the rules
-    socket.broadcast.emit("message", `${name} joined the chat.`)
+    socket.broadcast.emit("message", `${name}(${socket.id}) joined the chat.`)
   });
 
   socket.on('message', (text) => {
@@ -33,30 +36,51 @@ io.on("connection", (socket) => {
           socket.broadcast.emit("message", `${oldName} changed his name to ${newName}`)
           users[socket.id] = newName;
           break;
-        case "/leave":
-          delete users[socket.id];
-          socket.disconnect();
-          break;
         case "/ping":
           //// send message then see how long it takes
           time_taken = socket.emit("message", "pinging...");
           /// round out the milliseconds
           time = Math.round(time_taken);
           time = time / 1000;
-          wait = time.toFixed(3);
+          wait = time.toFixed(9);
           socket.emit("message", `Pong! Took ${wait} seconds.`);
           break;
+        case "/clear":
+          /// clear the screen
+          socket.emit("message", "\x1b[2J\x1b[0f");
+          socket.emit("message", "Cleared the screen.");
+          break;
+        case "/votekick":
+          const idToKick = args[0];
+          if (votes[idToKick] === undefined) {
+            votes[idToKick] = 1;
+            socket.emit("message", `You voted to kick ${idToKick}`);
+            socket.broadcast.emit("message", `${socket.id} voted to kick ${idToKick} 1/50`);
+          } else {
+            votes[idToKick]++;
+            socket.emit("message", `You voted to kick ${idToKick}`);
+          } if (users[idToKick] === undefined) {
+            socket.emit("message", `${idToKick} is not in the chat.`);
+          } if (votes[idToKick] === 2) {
+            socket.emit("message", `You have been kicked by ${idToKick}`);
+            socket.broadcast.emit("message", `${idToKick} has been kicked.`);
+            delete users[idToKick];
+            delete votes[idToKick];
+          }
+          break;
         case "/rules":
-          socket.emit("message", `
-          Rules:
-          1. No spamming
-          2. No Racism or Hate Speech
-          3. No NSFW content
-          4. Be respectful to other users
-          5. No advertising`);
+          socket.emit("message", 
+`
+Rules:
+1. No spamming
+2. No Racism or Hate Speech
+3. No NSFW content
+4. Be respectful to other users
+5. No advertising
+`);
           break;
         case "/help":
-          socket.emit("message", "Commands: /nick, /help, /userlist, /leave, /ping, /rules");
+          socket.emit("message", "Commands: /nick, /help, /userlist, /ping, /rules, /clear, /votekick(In development)");
           break;
         default:
           socket.emit("message", "Unknown command.");
@@ -74,9 +98,15 @@ io.on("connection", (socket) => {
   socket.on('disconnect', () => {
     socket.broadcast.emit("message", `${users[socket.id]} left the chat.`);
     console.log("Disconnected: " + socket.id);
+    console.log("-----------------------------------------------------");
     delete users[socket.id];
   });
 
 });
 
 io.listen(PORT);
+/// check version
+console.log(`Server is running on port ${PORT}`);
+console.log(`Version: ${config.version}`);
+console.log(`Build: ${config.build}`);
+console.log("-----------------------------------------------------");

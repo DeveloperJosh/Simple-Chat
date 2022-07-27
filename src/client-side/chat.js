@@ -1,16 +1,22 @@
 const io = require('socket.io-client');
-const socket = io("https://AgreeableExhaustedGenres.developerjosh.repl.co");
+const socket = io("http://localhost:3000");
 const readline = require('readline');
 
 const rl = readline.createInterface({
   input: process.stdin,
 });
-
-console.log("What is your name?");
-rl.question("What is your name?", (text) => {
+console.log("Simple Chat Client");
+console.log("");
+console.log("What do you want to call yourself?");
+rl.question("What do you want to call yourself?", (text) => {
     socket.emit('user', text.trim());
-    console.log("You joined the chat");
-    console.log("Type '/help' for a list of commands, Also type '/rules' for the rules.");
+    /// send the user id to the user
+    if (socket.id) {
+        console.log(`Your Id: ${socket.id}`);
+        console.log("Type '/help' for a list of commands, Also type '/rules' for the rules.");
+    } else {
+        console.log("It looks something went wrong. Please reconnect.\nUse Ctrl+C to exit.\nYou can reload the applicetion after that.");
+    }
     process.stdout.write("> ");
 });
 
