@@ -8,6 +8,8 @@ io.on("connection", (socket) => {
   console.log("New Connection: " + socket.id);
   socket.on('user', (name) => {
     users[socket.id] = name;
+    /// tell the user to read the rules
+    socket.emit('message', 'Read the rules, do /rules');
     socket.broadcast.emit("message", `${name} joined the chat.`)
   });
 
@@ -22,6 +24,7 @@ io.on("connection", (socket) => {
         case "/nick":
           /// get name and change it
           const newName = args.join(" ");
+          newName.trim();
           /// get old name
           const oldName = users[socket.id];
           console.log(`A user changed his name from ${oldName} to ${newName}`);
@@ -40,6 +43,15 @@ io.on("connection", (socket) => {
           time = time / 1000;
           socket.emit("message", `ping: ${time} ms`);
           break;
+        case "/rules":
+          socket.emit("message", `
+          Rules:
+          1. No spamming
+          2. No Racism or Hate Speech
+          3. No NSFW content
+          4. Be respectful to other users
+          5. No advertising`);
+          break;
         case "/help":
           socket.emit("message", "Commands: /nick, /help, /userlist, /leave, /ping");
           break;
@@ -47,7 +59,12 @@ io.on("connection", (socket) => {
           socket.emit("message", "Unknown command.");
       }
     } else {
-      socket.broadcast.emit("message", `${users[socket.id]}> ${text}`);
+      /// if there is no name then do not send message
+      if (users[socket.id]) {
+        socket.broadcast.emit("message", `${users[socket.id]}: ${text}`);
+      } else {
+        socket.emit("message", "You are not in the chat.");
+      }
     }
   });
 
