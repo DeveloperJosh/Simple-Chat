@@ -1,5 +1,5 @@
 const io = require("socket.io")();
-const config = require("../../config");
+const config = require("./config");
 
 const PORT = process.env.PORT || 3000;
 

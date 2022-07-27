@@ -1,5 +1,5 @@
 const io = require('socket.io-client');
-const socket = io("http://localhost:3000");
+const socket = io("https://AgreeableExhaustedGenres.developerjosh.repl.co");
 const readline = require('readline');
 
 const rl = readline.createInterface({
@@ -12,6 +12,7 @@ rl.question("What do you want to call yourself?", (text) => {
     socket.emit('user', text.trim());
     /// send the user id to the user
     if (socket.id) {
+        console.log("")
         console.log(`Your Id: ${socket.id}`);
         console.log("Type '/help' for a list of commands, Also type '/rules' for the rules.");
     } else {
