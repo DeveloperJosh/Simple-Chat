@@ -8,7 +8,7 @@ const rl = readline.createInterface({
 
 console.log("What is your name?");
 rl.question("What is your name?", (text) => {
-    socket.emit('new-user', text.trim());
+    socket.emit('user', text.trim());
     console.log("You joined the chat");
     process.stdout.write("> ");
 });
