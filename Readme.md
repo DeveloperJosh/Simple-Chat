@@ -21,5 +21,4 @@ Note: You will have to make your own chat app for your users if you edit the ser
 
 ## Chat working Live
 
-![](https://blue.is-from.space/cmd_u590l5njge.gif)
-
+![](https://github.com/DeveloperJosh/Simple-Chat/blob/master/images/cmd.gif)
