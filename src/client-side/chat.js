@@ -1,11 +1,12 @@
 const io = require('socket.io-client');
 const config = require('./client-config');
-const socket = io(`http://${config.host}:${config.port}`);
+const socket = io(config.server.url);
 const readline = require('readline');
 
 const rl = readline.createInterface({
   input: process.stdin,
 });
+
 console.log("Simple Chat Client");
 console.log("");
 console.log("What do you want to call yourself?");
