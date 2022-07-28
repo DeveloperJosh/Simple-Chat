@@ -11,7 +11,7 @@
   },
   "keywords": [],
   "author": "Josh Wells",
-  "license": "ISC",
+  "license": "Apache-2.0 license",
   "dependencies": {
     "dotenv": "^16.0.1",
     "socket.io": "^4.5.1",

@@ -1,5 +1,6 @@
 const io = require('socket.io-client');
-const socket = io("http://localhost:3000");
+const config = require('./client-config');
+const socket = io(`http://${config.host}:${config.port}`);
 const readline = require('readline');
 
 const rl = readline.createInterface({
