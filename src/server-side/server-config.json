@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "v2.0",
     "name": "Simple Chat Server",
     "description": "A simple chat server, written in Js.",
     "author": "DeveloperJosh",
