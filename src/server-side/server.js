@@ -6,13 +6,29 @@ const PORT = process.env.PORT || 3000;
 const users = {};
 const votes = {};
 
+/// we only allow 90 users to connect
+const maxUsers = 90;
+
+function wait(time) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time);
+    });
+}
+
 io.on("connection", (socket) => {
   console.log("New Connection: " + socket.id);
   console.log("-----------------------------------------------------");
   socket.on('user', (name) => {
     users[socket.id] = name;
-    /// tell the user to read the rules
-    socket.broadcast.emit("message", `${name}(${socket.id}) joined the chat.`)
+    /// if users is greater than maxUsers, we disconnect the user
+    if (Object.keys(users).length > maxUsers) {
+      socket.emit("message", `You will be disconnected because there are too many users, in 5 seconds.`);
+      wait(5000).then(() => {
+        socket.disconnect();
+      });
+    } else {
+      socket.broadcast.emit("message", `${name}(${socket.id}) joined the chat.`)
+    }
   });
 
   socket.on('message', (text) => {
@@ -23,7 +39,7 @@ io.on("connection", (socket) => {
         case "/userlist":
           /// count the users 
           const userCount = Object.keys(users).length;
-          socket.emit("message", `There is ${userCount}/90 users online.`);
+          socket.emit("message", `There is ${userCount}/${maxUsers} users online.`);
           socket.emit("message", "Userlist: " + Object.values(users).join(", "));
           break;
         case "/nick":
