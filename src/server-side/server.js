@@ -1,3 +1,6 @@
+/*
+* This code is used to create a server that can be used to communicate with the client.
+*/
 const io = require("socket.io")();
 const config = require("./server-config");
 
