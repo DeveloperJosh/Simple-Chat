@@ -1,7 +1,7 @@
 const io = require("socket.io")();
 const config = require("./config");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || config.server.port;
 
 const users = {};
 const votes = {};
@@ -46,20 +46,28 @@ io.on("connection", (socket) => {
           /// get name and change it
           const newName = args.join(" ");
           newName.trim();
-          /// get old name
-          const oldName = users[socket.id];
-          console.log(`A user changed his name from ${oldName} to ${newName}`);
-          socket.broadcast.emit("message", `${oldName} changed his name to ${newName}`)
-          users[socket.id] = newName;
+          /// if args is empty, we send a message to the user
+          if (newName.length === 0) {
+            socket.emit("message", "Please enter a name.");
+          } else 
+            if (Object.values(users).includes(newName)) {
+              socket.emit("message", "This name is already in use.");
+            } else {
+              /// if the name is not in use, we change the name
+              const oldName = users[socket.id];
+              console.log("-----------------------------------------------------");
+              console.log(`A user changed his name from ${oldName} to ${newName}`);
+              console.log("-----------------------------------------------------");
+              socket.broadcast.emit("message", `${oldName} changed his name to ${newName}`)
+              users[socket.id] = newName;
+            } // end of else
           break;
         case "/ping":
           //// send message then see how long it takes
           time_taken = socket.emit("message", "pinging...");
           /// round out the milliseconds
-          time = Math.round(time_taken);
-          time = time / 1000;
-          wait = time.toFixed(9);
-          socket.emit("message", `Pong! Took ${wait} seconds.`);
+          time_taken = Math.round(time_taken * 100) / 100;
+          socket.emit("message", `Pong! Took ${time_taken}ms.`);
           break;
         case "/clear":
           /// clear the screen
@@ -80,6 +88,9 @@ io.on("connection", (socket) => {
           } if (votes[idToKick] === 2) {
             socket.emit("message", `You have been kicked by ${idToKick}`);
             socket.broadcast.emit("message", `${idToKick} has been kicked.`);
+            console.log("-----------------------------------------------------");
+            console.log(`${idToKick} has been kicked.`);
+            console.log("-----------------------------------------------------");
             delete users[idToKick];
             delete votes[idToKick];
           }
@@ -93,6 +104,7 @@ Rules:
 3. No NSFW content
 4. Be respectful to other users
 5. No advertising
+6. No being homophobic or transphobic
 `);
           break;
         case "/help":
@@ -106,7 +118,7 @@ Rules:
       if (users[socket.id]) {
         socket.broadcast.emit("message", `${users[socket.id]}: ${text}`);
       } else {
-        socket.emit("message", "It looks something went wrong. Please reconnect.\nYou can type '/help' for a list of commands.");
+        socket.emit("message", "It looks like the server may have been reset please reconnect.\nYou can type '/help' for a list of commands.");
       }
     }
   });
@@ -122,7 +134,9 @@ Rules:
 
 io.listen(PORT);
 /// check version
+console.log("-----------------------------------------------------");
 console.log(`Server is running on port ${PORT}`);
 console.log(`Version: ${config.version}`);
-console.log(`Build: ${config.build}`);
+build = `${process.platform} ${process.arch} ${process.version}`;
+console.log(`Build: ${build}`);
 console.log("-----------------------------------------------------");

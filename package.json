@@ -10,7 +10,7 @@
     "chat": "node src/client-side/chat.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Josh Wells",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.1",

@@ -1,5 +1,5 @@
 const io = require('socket.io-client');
-const socket = io("https://AgreeableExhaustedGenres.developerjosh.repl.co");
+const socket = io("http://localhost:3000");
 const readline = require('readline');
 
 const rl = readline.createInterface({
