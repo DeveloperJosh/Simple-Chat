@@ -41,4 +41,4 @@ Yes you can use any language that supports or has a package for socket.io
 
 #### Can i host my own server?
 
-Yes, you just need to download the js file or download and run teh exe file.
+Yes, you just need to download the js file or download and run the exe file.
