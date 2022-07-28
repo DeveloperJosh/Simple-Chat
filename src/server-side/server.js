@@ -136,7 +136,9 @@ io.listen(PORT);
 /// check version
 console.log("-----------------------------------------------------");
 console.log(`Server is running on port ${PORT}`);
+console.log("Desscription: " + config.description);
 console.log(`Version: ${config.version}`);
+console.log(`Author: ${config.author}`);
 build = `${process.platform} ${process.arch} ${process.version}`;
 console.log(`Build: ${build}`);
 console.log("-----------------------------------------------------");
