@@ -24,7 +24,7 @@ Note: You will have to make your own chat app for your users if you edit the ser
 ![](https://github.com/DeveloperJosh/Simple-Chat/blob/master/images/cmd_demo.gif)
 
 # Server Demo
-
+![](https://github.com/DeveloperJosh/Simple-Chat/blob/master/images/server_image.png)
 
 ## What we use
 
