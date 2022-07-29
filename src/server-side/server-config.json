@@ -6,6 +6,7 @@
     "server": {
         "port": 3000,
         "maxUsers": 90,
-        "maxVotes": 15
+        "maxVotes": 15,
+        "adminpassword": "password"
     }
 }

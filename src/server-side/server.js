@@ -6,6 +6,8 @@ const PORT = process.env.PORT || config.server.port;
 
 const users = {};
 const votes = {};
+const admins = {};
+const admin_clients = {};
 
 /// we only allow 90 users to connect
 const maxUsers = config.server.maxUsers;
@@ -32,7 +34,14 @@ io.on("connection", (socket) => {
       });
     } else {
       socket.broadcast.emit("message", `${name}(${socket.id}) joined the chat.`)
-    }
+    } //// check if user is logging in from the admin client
+  });
+
+  socket.on("admin", (name) => {
+    socket.emit("message", `Please run /admin and enter your password.`);
+    users[socket.id] = name;
+    /// add to admins clients list
+    admin_clients[socket.id] = socket;
   });
 
   socket.on('message', (text) => {
@@ -82,18 +91,17 @@ io.on("connection", (socket) => {
           const idToKick = args[0];
           if (votes[idToKick] === undefined) {
             votes[idToKick] = 1;
-            socket.emit("message", `You voted to kick ${idToKick}`);
-            socket.broadcast.emit("message", `${socket.id} voted to kick ${idToKick} 1/50`);
+            socket.emit("message", `You voted to kick ${users[idToKick]}`);
+            socket.broadcast.emit("message", `${socket.id} voted to kick ${users[idToKick]} 1/${maxVotes}`);
           } else {
             votes[idToKick]++;
             socket.emit("message", `You voted to kick ${idToKick}`);
           } if (users[idToKick] === undefined) {
             socket.emit("message", `${idToKick} is not in the chat.`);
           } if (votes[idToKick] === maxVotes) {
-            socket.emit("message", `You have been kicked by ${idToKick}`);
-            socket.broadcast.emit("message", `${idToKick} has been kicked.`);
+            socket.broadcast.emit("message", `${users[idToKick]} has been kicked.`);
             console.log("-----------------------------------------------------");
-            console.log(`${idToKick} has been kicked.`);
+            console.log(`${users[idToKick]} has been kicked.`);
             console.log("-----------------------------------------------------");
             delete users[idToKick];
             delete votes[idToKick];
@@ -112,7 +120,31 @@ Rules:
 `);
           break;
         case "/help":
-          socket.emit("message", "Commands: /nick, /help, /userlist, /ping, /rules, /clear, /votekick(In development)");
+          /// if the user is an admin, we send the admin help
+          if (admins[socket.id] !== undefined) {
+            socket.emit("message", "Admin commands: /help");
+          } else {
+            socket.emit("message", "Commands: /nick, /help, /userlist, /ping, /rules, /clear, /votekick(In development)");
+          }
+          break;
+        case "/admin":
+          /// ask for the password
+          admin_password = args[0];
+
+          if (admin_clients[socket.id] === undefined) {
+            socket.emit("message", `You are not an admin.`);
+            return;
+          }
+
+          if (admin_password === config.server.adminpassword) {
+            admins[socket.id] = users[socket.id]; 
+            console.log("Admin: " + users[socket.id]);
+            console.log("-----------------------------------------------------");
+            socket.emit("message", `Welcome ${users[socket.id]}!`);
+            socket.broadcast.emit("message", `Admin ${users[socket.id]} joined the chat.`)
+            } else {
+              socket.emit("message", `Incorrect password.`);
+            } /// if user is not in admin_clients, give error
           break;
         default:
           socket.emit("message", "Unknown command.");
@@ -140,9 +172,9 @@ io.listen(PORT);
 /// check version
 console.log("-----------------------------------------------------");
 console.log(`Server is running on port ${PORT}`);
-console.log("Desscription: " + config.description);
+console.log(`Description: ${config.description}`);
 console.log(`Version: ${config.version}`);
 console.log(`Author: ${config.author}`);
-build = `${process.platform} ${process.arch} ${process.version}`;
+build = `OS: ${process.platform}, Arch: ${process.arch}, Node: ${process.version}`;
 console.log(`Build: ${build}`);
 console.log("-----------------------------------------------------");

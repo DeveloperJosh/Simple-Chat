@@ -3,7 +3,6 @@ const io = require('socket.io-client');
 const config = require('./client-config');
 const socket = io(config.server.url);
 const readline = require('readline');
-const ping = require('ping');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -28,14 +27,8 @@ rl.question("What do you want to call yourself?", (text) => {
 
 socket.on("connect_error", (err) => {
     /// say that we failed to connect then try again
-    setTimeout(() => {
-        console.log("");
-        console.log("Failed to connect to the server.");
-        /// send them server contact info
-        console.log("");
-        console.log("Trying again in 9 seconds...");
-        socket.connect();
-    }, 9000);
+    console.log("");
+    console.log("Failed to connect to the server.\nPlease contact the server owner.");
 });
 
 socket.on("message", (text) => {
@@ -47,18 +40,6 @@ socket.on("message", (text) => {
 // listen for the "disconnect" event
 socket.on("disconnect", () => {
     console.log("\nDisconnected from server.\nAsk the admin of the server to check the server status.");
-    /// check the server status
-    console.log("\nChecking server status...");
-    /// wait 5 seconds
-    setTimeout(() => {
-    ping.sys.probe(config.server.url, (isAlive) => {
-        if (isAlive) {
-            console.log("The server is online.");
-        } else {
-            console.log("The server is offline.");
-        }
-    });
-    }, 5000);
 });
 
 rl.prompt();
