@@ -1,7 +1,34 @@
 //You may edit the code below, nut you may not edit the credits command.
 const io = require("socket.io")();
 const config = require("./server-config");
-const ping = require("ping");
+const versionCheck = require('github-version-checker');
+/// check github for the latest version
+function checkVersion() { 
+  const options = {
+    token: 'jdfijisijjdisjifjifji',
+    repo: 'Simple-Chat',
+    owner: 'DeveloperJosh',
+    currentVersion: require('../../package.json').version,
+  };
+  versionCheck(options, function (error, update) {
+    if (error) {
+      console.log(error);
+    } else if (update) {
+      console.log("");
+      console.log("A new version of Simple Chat is available!");
+      console.log("");
+      console.log("Current Version: " + options.currentVersion);
+      console.log("Latest Version: " + update.version);
+      console.log("");
+      console.log("Download Link: " + update.url);
+      console.log("");
+    } else {
+      console.log("");
+      console.log("Simple Chat is up to date!");
+      console.log("");
+    }
+  });
+}
 
 const PORT = process.env.PORT || config.server.port;
 
@@ -43,6 +70,9 @@ io.on("connection", (socket) => {
     users[socket.id] = name;
     /// add to admins clients list
     admin_clients[socket.id] = socket;
+    console.log("-----------------------------------------------------");
+    console.log(`${name}(${socket.id}) is connected on a admin client.\nIf user is not a admin please update the password.`);
+    console.log("-----------------------------------------------------");
   });
 
   socket.on('message', (text) => {
@@ -184,3 +214,4 @@ console.log(`Author: ${config.author}`);
 build = `OS: ${process.platform}, Arch: ${process.arch}, Node: ${process.version}`;
 console.log(`Build: ${build}`);
 console.log("-----------------------------------------------------");
+checkVersion();
