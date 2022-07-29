@@ -8,7 +8,8 @@ const users = {};
 const votes = {};
 
 /// we only allow 90 users to connect
-const maxUsers = 90;
+const maxUsers = config.server.maxUsers;
+const maxVotes = config.server.maxVotes;
 
 function wait(time) {
     return new Promise((resolve) => {
@@ -20,6 +21,8 @@ io.on("connection", (socket) => {
   console.log("New Connection: " + socket.id);
   console.log("-----------------------------------------------------");
   socket.on('user', (name) => {
+    console.log("User: " + name);
+    console.log("-----------------------------------------------------");
     users[socket.id] = name;
     /// if users is greater than maxUsers, we disconnect the user
     if (Object.keys(users).length > maxUsers) {
@@ -86,7 +89,7 @@ io.on("connection", (socket) => {
             socket.emit("message", `You voted to kick ${idToKick}`);
           } if (users[idToKick] === undefined) {
             socket.emit("message", `${idToKick} is not in the chat.`);
-          } if (votes[idToKick] === 2) {
+          } if (votes[idToKick] === maxVotes) {
             socket.emit("message", `You have been kicked by ${idToKick}`);
             socket.broadcast.emit("message", `${idToKick} has been kicked.`);
             console.log("-----------------------------------------------------");
