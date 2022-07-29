@@ -186,4 +186,3 @@ console.log(`Author: ${config.author}`);
 build = `OS: ${process.platform}, Arch: ${process.arch}, Node: ${process.version}`;
 console.log(`Build: ${build}`);
 console.log("-----------------------------------------------------");
-checkVersion();
