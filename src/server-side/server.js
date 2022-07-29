@@ -1,6 +1,7 @@
 //You may edit the code below, nut you may not edit the credits command.
 const io = require("socket.io")();
 const config = require("./server-config");
+const ping = require("ping");
 
 const PORT = process.env.PORT || config.server.port;
 
@@ -76,11 +77,9 @@ io.on("connection", (socket) => {
             } // end of else
           break;
         case "/ping":
-          //// send message then see how long it takes
-          time_taken = socket.emit("message", "pinging...");
-          /// round out the milliseconds
-          time_taken = Math.round(time_taken * 100) / 100;
-          socket.emit("message", `Pong! Took ${time_taken}ms.`);
+          timer = new Date().getTime();
+          timer = timer - (timer % 1000);
+          socket.emit("message", `Pong! ${timer}ms`);
           break;
         case "/clear":
           /// clear the screen
@@ -152,6 +151,11 @@ Rules:
           socket.emit("message", "Unknown command.");
       }
     } else {
+      /// if admin color text
+      if (admins[socket.id] !== undefined) {
+        socket.broadcast.emit("message", `\x1b[33m${admins[socket.id]}: ${text} \x1b[0m`);
+        return;
+      }
       /// if there is no name then do not send message
       if (users[socket.id]) {
         socket.broadcast.emit("message", `${users[socket.id]}: ${text}`);
