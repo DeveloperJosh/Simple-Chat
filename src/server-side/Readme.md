@@ -7,7 +7,7 @@ First you need to edit the password for the admin client.
 Here is the config with the stuff you need to edit
 
 Server-Config.json
-```json
+```jsonc
 {
     "version": "v2.0", /// keep this
     "name": "Simple Chat Server", // edit this
