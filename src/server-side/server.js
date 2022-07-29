@@ -123,6 +123,8 @@ Rules:
           /// if the user is an admin, we send the admin help
           if (admins[socket.id] !== undefined) {
             socket.emit("message", "Admin commands: /help");
+            socket.emit("message", "");
+            socket.emit("message", "Commands: /nick, /help, /userlist, /ping, /rules, /clear, /votekick(In development)");
           } else {
             socket.emit("message", "Commands: /nick, /help, /userlist, /ping, /rules, /clear, /votekick(In development)");
           }
