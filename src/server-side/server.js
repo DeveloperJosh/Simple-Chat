@@ -1,34 +1,6 @@
 //You may edit the code below, nut you may not edit the credits command.
 const io = require("socket.io")();
 const config = require("./server-config");
-const versionCheck = require('github-version-checker');
-/// check github for the latest version
-function checkVersion() { 
-  const options = {
-    token: 'jdfijisijjdisjifjifji',
-    repo: 'Simple-Chat',
-    owner: 'DeveloperJosh',
-    currentVersion: require('../../package.json').version,
-  };
-  versionCheck(options, function (error, update) {
-    if (error) {
-      console.log(error);
-    } else if (update) {
-      console.log("");
-      console.log("A new version of Simple Chat is available!");
-      console.log("");
-      console.log("Current Version: " + options.currentVersion);
-      console.log("Latest Version: " + update.version);
-      console.log("");
-      console.log("Download Link: " + update.url);
-      console.log("");
-    } else {
-      console.log("");
-      console.log("Simple Chat is up to date!");
-      console.log("");
-    }
-  });
-}
 
 const PORT = process.env.PORT || config.server.port;
 
