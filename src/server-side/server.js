@@ -42,8 +42,7 @@ io.on("connection", (socket) => {
     users[socket.id] = name;
     /// add to admins clients list
     admin_clients[socket.id] = socket;
-    console.log("-----------------------------------------------------");
-    console.log(`${name}(${socket.id}) is connected on a admin client.\nIf user is not a admin please update the password.`);
+    console.log(`${name}(${socket.id}) is connected on a admin client.`);
     console.log("-----------------------------------------------------");
   });
 
