@@ -28,3 +28,7 @@ How to run the server
    npm install
    npm start
 ```
+
+And boom you have a server running.
+
+If you need any help, you can ask me on [discord](https://discord.gg/kV8HP2qa2j)
