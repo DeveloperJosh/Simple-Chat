@@ -22,10 +22,9 @@ Server-Config.json
 }
 ```
 
-Once you edited what you need run the exe or the js file
+How to run the server
 
-What you need to run the js file
-
-+ Node v12 or 16
-+ Socket.io
-+ Socket.io-client
+```bash
+   npm install
+   npm start
+```

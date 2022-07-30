@@ -3,6 +3,10 @@
 
 Simple Chat is a chat for new developers that want to learn more about programming.
 
+# Deployment
+
+For deployment steps, see the [Deployment Guide](https://github.com/DeveloperJosh/Simple-Chat/blob/master/src/server-side/Readme.md)
+
 ## Chat Demo
 
 ![](https://github.com/DeveloperJosh/Simple-Chat/blob/master/images/cmd_demo.gif)
