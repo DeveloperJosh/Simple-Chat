@@ -1,11 +1,11 @@
 {
-  "name": "jschat",
+  "name": "simple-chat",
   "version": "v2.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/server-side/server.js",
+    "start": "node src/server-side/server.js",
     "start-dev": "nodemon src/server-side/server.js --watch src/server-side/server.js",
     "chat": "node src/client-side/chat.js"
   },
