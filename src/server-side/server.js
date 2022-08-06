@@ -8,6 +8,23 @@ const users = {};
 const votes = {};
 const admins = {};
 const admin_clients = {};
+const user_color = {};
+let color_ = {
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  magenta: "\x1b[35m",
+  cyan: "\x1b[36m",
+  white: "\x1b[37m"
+}
+
+function colors(color, text) {
+  /// example: colors("red", "hello")
+  if (color in color_) {
+    return color_[color] + text + "\x1b[0m";
+  }
+}
 
 /// we only allow 90 users to connect
 const maxUsers = config.server.maxUsers;
@@ -148,18 +165,40 @@ Rules:
               socket.emit("message", `Incorrect password.`);
             } /// if user is not in admin_clients, give error
           break;
+        case "/color":
+          /// get color and change it
+          const newColor = args[0];
+          if (newColor.length === 0) {
+            socket.emit("message", "Please enter a color.");
+          } else {
+            /// check if color is in color_
+            if (color_[newColor] === undefined) {
+              /// show list
+              socket.emit("message", "Available colors: " + Object.keys(color_).join(", "));
+            } else {
+              /// change the color
+              user_color[socket.id] = newColor;
+              socket.emit("message", `Your color has been changed to ${newColor}.`);
+            } // end of else
+          }
+          break;
         default:
           socket.emit("message", "Unknown command.");
       }
     } else {
       /// if admin color text
       if (admins[socket.id] !== undefined) {
-        socket.broadcast.emit("message", `\x1b[33m${admins[socket.id]}: ${text} \x1b[0m`);
+        socket.broadcast.emit("message", `\x1b[31m${admins[socket.id]}: ${text} \x1b[0m`);
         return;
       }
       /// if there is no name then do not send message
       if (users[socket.id]) {
-        socket.broadcast.emit("message", `${users[socket.id]}: ${text}`);
+        //// lets do a check for user_colors if there is no color, we set it to default
+        if (user_color[socket.id] === undefined) {
+           socket.broadcast.emit("message", `${colors('cyan', `${users[socket.id]}: ${text}`)}`);
+        } else {
+          socket.broadcast.emit("message", `${colors(user_color[socket.id], `${users[socket.id]}: ${text}`)}`);
+        }
       } else {
         socket.emit("message", "It looks like the server may have been reset please reconnect.\nYou can type '/help' for a list of commands.");
       }
