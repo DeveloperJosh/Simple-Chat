@@ -1,11 +1,13 @@
 //You may edit the code below, nut you may not edit the credits command.
 const io = require("socket.io")();
 const config = require("./server-config");
+require('dotenv').config()
 
 const PORT = process.env.PORT || config.server.port;
 
 const users = {};
 const votes = {};
+const voted = {};
 const admins = {};
 const admin_clients = {};
 const user_color = {};
@@ -111,11 +113,17 @@ io.on("connection", (socket) => {
           const idToKick = args[0];
           if (votes[idToKick] === undefined) {
             votes[idToKick] = 1;
+            voted[socket.id] = socket.id;
             socket.emit("message", `You voted to kick ${users[idToKick]}`);
+            socket.emit("message", `${socket.id} voted to kick ${users[idToKick]} 1/${maxVotes}`);
             socket.broadcast.emit("message", `${socket.id} voted to kick ${users[idToKick]} 1/${maxVotes}`);
           } else {
+            if (socket.id in voted) {
+              socket.emit("message", `You already voted to kick ${users[idToKick]}`);
+            } else {
             votes[idToKick]++;
             socket.emit("message", `You voted to kick ${idToKick}`);
+            }
           } if (users[idToKick] === undefined) {
             socket.emit("message", `${idToKick} is not in the chat.`);
           } if (votes[idToKick] === maxVotes) {
@@ -158,7 +166,7 @@ Rules:
             return;
           }
 
-          if (admin_password === config.server.adminpassword) {
+          if (admin_password === process.env.PASSWORD || config.server.adminpassword) {
             admins[socket.id] = users[socket.id]; 
             console.log("Admin: " + users[socket.id]);
             console.log("-----------------------------------------------------");
@@ -166,6 +174,7 @@ Rules:
             socket.broadcast.emit("message", `Admin ${users[socket.id]} joined the chat.`)
             } else {
               socket.emit("message", `Incorrect password.`);
+              console.log(process.env.PASSWORD);
             } /// if user is not in admin_clients, give error
           break;
         case "/color":
