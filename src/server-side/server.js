@@ -191,7 +191,7 @@ Rules:
     } else {
       /// if admin color text
       if (admins[socket.id] !== undefined) {
-        socket.broadcast.emit("message", `\x1b[31m${admins[socket.id]}: ${text} \x1b[0m`);
+        socket.broadcast.emit("message", `\x1b[31m${admins[socket.id]}☕: ${text} \x1b[0m`);
         return;
       }
       /// if there is no name then do not send message
