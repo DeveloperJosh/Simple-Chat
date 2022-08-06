@@ -1,5 +1,5 @@
 {
     "server": {
-        "url": "http://localhost:3000"
+        "url": "https://simple-chat-room-0.herokuapp.com/"
     }
 }
