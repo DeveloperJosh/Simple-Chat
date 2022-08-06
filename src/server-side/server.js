@@ -191,16 +191,16 @@ Rules:
     } else {
       /// if admin color text
       if (admins[socket.id] !== undefined) {
-        socket.broadcast.emit("message", `\x1b[31m${admins[socket.id]}☕\x1b[0m: ${text}`);
+        socket.broadcast.emit("message", `\x1b[31m${admins[socket.id]}☕:\x1b[0m ${text}`);
         return;
       }
       /// if there is no name then do not send message
       if (users[socket.id]) {
         //// lets do a check for user_colors if there is no color, we set it to default
         if (user_color[socket.id] === undefined) {
-           socket.broadcast.emit("message", `${colors('cyan', `${users[socket.id]}: ${text}`)}`);
+          socket.broadcast.emit("message", `${colors('cyan', `${users[socket.id]}:`)} ${text}`);
         } else {
-          socket.broadcast.emit("message", `${colors(user_color[socket.id], `${users[socket.id]}`)}: ${text}`);
+          socket.broadcast.emit("message", `${colors(user_color[socket.id], `${users[socket.id]}:`)} ${text}`);
         }
       } else {
         socket.emit("message", "It looks like the server may have been reset please reconnect.\nYou can type '/help' for a list of commands.");
