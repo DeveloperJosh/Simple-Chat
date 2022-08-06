@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
   console.log("New Connection: " + socket.id);
   console.log("-----------------------------------------------------");
   socket.on('user', (name) => {
-    console.log(`User: ${name}(${ip})`)
+    console.log(`User: ${name}`)
     console.log("-----------------------------------------------------");
     users[socket.id] = name;
     /// if users is greater than maxUsers, we disconnect the user
