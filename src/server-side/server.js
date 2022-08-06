@@ -43,7 +43,6 @@ io.on("connection", (socket) => {
   console.log("New Connection: " + socket.id);
   console.log("-----------------------------------------------------");
   socket.on('user', (name) => {
-    const ip = socket.handshake.headers["x-forwarded-for"].split(",")[1].toString().substring(1, this.length);
     console.log(`User: ${name}(${ip})`)
     console.log("-----------------------------------------------------");
     users[socket.id] = name;
