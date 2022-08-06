@@ -19,6 +19,9 @@ let color_ = {
   white: "\x1b[37m"
 }
 
+/**
+ * @param {string} You can pick a color from the last above
+ */
 function colors(color, text) {
   /// example: colors("red", "hello")
   if (color in color_) {
@@ -40,7 +43,8 @@ io.on("connection", (socket) => {
   console.log("New Connection: " + socket.id);
   console.log("-----------------------------------------------------");
   socket.on('user', (name) => {
-    console.log("User: " + name);
+    var ip = socket.request.connection.remoteAddress;
+    console.log(`User: ${name}(${ip})`)
     console.log("-----------------------------------------------------");
     users[socket.id] = name;
     /// if users is greater than maxUsers, we disconnect the user
