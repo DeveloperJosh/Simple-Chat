@@ -181,21 +181,17 @@ Rules:
         case "/color":
           /// get color and change it
           const newColor = args[0];
-          if (newColor.length === 0) {
-            socket.emit("message", "Please enter a color.");
-          } else {
             /// check if color is in color_
             if (color_[newColor] === undefined) {
               /// show list
               socket.emit("message", "Available colors: " + Object.keys(color_).join(", "));
-            } else if (admins[socket.id] ==! undefined) {
-              socket.emit("message", "You cannot change your color, Sry.");
+            } else if (admins[socket.id] !== undefined) {
+              socket.emit("message", `Since you are an admin, You will not be able to change your color.`);
             } else {
               /// change the color
               user_color[socket.id] = newColor;
               socket.emit("message", `Your color has been changed to ${newColor}.`);
             } // end of else
-          }
           break;
         default:
           socket.emit("message", "Unknown command.");
