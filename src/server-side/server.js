@@ -188,6 +188,8 @@ Rules:
             if (color_[newColor] === undefined) {
               /// show list
               socket.emit("message", "Available colors: " + Object.keys(color_).join(", "));
+            } else if (admins[socket.id] ==! undefined) {
+              socket.emit("message", "You cannot change your color, Sry.");
             } else {
               /// change the color
               user_color[socket.id] = newColor;
