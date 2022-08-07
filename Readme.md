@@ -36,15 +36,13 @@ We are are now working on a website
 ## What the website will bring
 Site has not yet be created only the chat room has.
 
-We will be using [MySQL](https://www.mysql.com/) for the database,
-[Express](https://expressjs.com/) for the backend, and [React](https://reactjs.org/) for the forntend.
+We will be using[Express](https://expressjs.com/) for the backend,
+and [React](https://reactjs.org/) for the forntend.
 
 ## Features
 
 1. Chat rooms that can be created and joined by anyone, They will all use a ip like `chat-name-of-room.simple-chat.xyz`
 
-2. Owner Sign Up and Login to edit the server settings. (For people who want to host their own server)
+2. Chat room settings that can be changed by the owner of the chat room
 
-3. Server Settings for owner accounts and Room Settings. for rooms (For people who want to host their own server)
-
-Note the users will not be able to sign up for message saying since we here at Simple Chat would like to have all the messages sent by users to be anonymous.
+Note: Nothing will be saved as this server is anonymous and does not have a database.
