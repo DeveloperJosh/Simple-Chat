@@ -22,10 +22,11 @@ let color_ = {
 }
 
 /**
- * @param {string} You can pick a color from the last above
+ * @param {string} Color You can pick blue, green, red, yellow, magenta, cyan, white
+ * @param {string} Text you can put any text you want
+ * @usage console.log(colors("blue", "Hello World"))
  */
 function colors(color, text) {
-  /// example: colors("red", "hello")
   if (color in color_) {
     return color_[color] + text + "\x1b[0m";
   }
@@ -166,7 +167,7 @@ Rules:
             return;
           }
 
-          if (admin_password === process.env.PASSWORD || config.server.adminpassword) {
+          if (admin_password === process.env.PASSWORD) {
             admins[socket.id] = users[socket.id]; 
             console.log("Admin: " + users[socket.id]);
             console.log("-----------------------------------------------------");
@@ -200,7 +201,7 @@ Rules:
     } else {
       /// if admin color text
       if (admins[socket.id] !== undefined) {
-        socket.broadcast.emit("message", `\x1b[31m${admins[socket.id]}☕:\x1b[0m ${text}`);
+        socket.broadcast.emit("message", `${config.server.staffemoji}${colors('red', `${admins[socket.id]}`)}: ${text}`);
         return;
       }
       /// if there is no name then do not send message
@@ -232,7 +233,7 @@ console.log("-----------------------------------------------------");
 console.log(`Server is running on port ${PORT}`);
 console.log(`Description: ${config.description}`);
 console.log(`Version: ${config.version}`);
-console.log(`Author: ${config.author}`);
+console.log(`Author: DeveloperJosh`);
 build = `OS: ${process.platform}, Arch: ${process.arch}, Node: ${process.version}`;
 console.log(`Build: ${build}`);
 console.log("-----------------------------------------------------");

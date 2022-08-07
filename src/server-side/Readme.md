@@ -12,15 +12,19 @@ Server-Config.json
     "version": "v2.0", /// keep this
     "name": "Simple Chat Server", // edit this
     "description": "A simple chat server, written in Js.", // edit this
-    "author": "DeveloperJosh", // keep this
     "server": {
         "port": 3000, // you can edit or keep it
         "maxUsers": 90, // keep or edit
-        "maxVotes": 15, //keep or edit
-        "adminpassword": "password" // edit this
+        "maxVotes": 15
     }
 }
 ```
+
+Make a .env file outside of the server folder and the src folder.
+```
+PASSWORD=password
+```
+This is the password for the admin login.
 
 How to run the server
 
