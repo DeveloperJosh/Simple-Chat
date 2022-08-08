@@ -217,16 +217,24 @@ Rules:
   });
 
   socket.on('disconnect', () => {
-    socket.broadcast.emit("message", `${users[socket.id]} left the chat.`);
-    console.log("Disconnected: " + socket.id);
-    console.log("-----------------------------------------------------");
-    delete users[socket.id];
+    /// check if user is in users
+    if (users[socket.id] !== undefined) {
+      socket.broadcast.emit("message", `${users[socket.id]} left the chat.`);
+      console.log("Disconnected: " + socket.id);
+      console.log("-----------------------------------------------------");
+      delete users[socket.id];
+      delete user_color[socket.id];
+      delete voted[socket.id];
+      delete votes[socket.id];
+    } else {
+      console.log("Disconnected: " + socket.id);
+      console.log("-----------------------------------------------------");
+    }
   });
 
 });
 
 io.listen(PORT);
-/// check version
 console.log("-----------------------------------------------------");
 console.log(`Server is running on port ${PORT}`);
 console.log(`Description: ${config.description}`);

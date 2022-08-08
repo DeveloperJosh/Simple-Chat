@@ -20,7 +20,7 @@ Server-Config.json
 }
 ```
 
-Make a .env file outside of the server folder and the src folder.
+Make a .env or edit .env.sample file outside of the server folder and the src folder.
 ```
 PASSWORD=password
 ```
