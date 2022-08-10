@@ -1,5 +1,5 @@
 {
     "server": {
-        "url": "http://chat.simple-chat.xyz/"
+        "url": "http://localhost:3000"
     }
 }

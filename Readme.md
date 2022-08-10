@@ -36,7 +36,7 @@ We are are now working on a website
 ## What the website will bring
 Site has not yet be created only the chat room has.
 
-We will be using [Express](https://expressjs.com/) for the backend,
+We will be using [nextjs](https://nextjs.org/) for the backend,
 and [React](https://reactjs.org/) for the forntend.
 
 ## Features
