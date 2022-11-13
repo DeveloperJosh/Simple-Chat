@@ -98,6 +98,17 @@ io.on("connection", (socket) => {
                             return;
                         }
                     }
+                    // message can't be empty
+                    if (new_name == "") {
+                        socket.emit("message", `You can't set your name to nothing.`);
+                        return;
+                    }
+                    // name cannot have spaces
+                    if (new_name.includes(" ")) {
+                        socket.emit("message", `Your name cannot have spaces.`);
+                        return;
+                    }
+
                     if (new_name.length > 20) {
                         socket.emit("message", "Your name is too long, please choose a shorter name.");
                         return;
@@ -243,18 +254,25 @@ Rules:
                 }
             }
             if (room === undefined) {
-                /// if message has a bad_word, censor it //bad_words is a regex
                 if (bad_words.test(message)) {
-                    //message = message.replace(bad_words, "****");
-                    /// replace the word with * the same length as the word
                     message = message.replace(bad_words, (match) => {
                         return "*".repeat(match.length);
                     });
                 }
-                /// send the message to everyone in the lobby
+                if (message.replace(/\s/g, "").length === 0) {
+                    return;
+                }
                 io.to("lobby").emit("message", `${users[socket.id]}: ${message}`);
             }
             else {
+                if (bad_words.test(message)) {
+                    message = message.replace(bad_words, (match) => {
+                        return "*".repeat(match.length);
+                    });
+                }
+                if (message.replace(/\s/g, "").length === 0) {
+                    return;
+                }
                 io.to(room).emit("message", `${users[socket.id]}: ${message}`);
             }
         }

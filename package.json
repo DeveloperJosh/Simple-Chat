@@ -3,6 +3,7 @@
   "version": "v2.0",
   "description": "",
   "main": "server.js",
+  "bin": "src/server-side/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server-side/server.js",
@@ -18,5 +19,6 @@
     "request": "^2.88.2",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1"
-  }
+  },
+  "pkg": { "scripts": "src/server-side/**/*.js", "assets": "src/server-side/pages/**/*" }
 }
