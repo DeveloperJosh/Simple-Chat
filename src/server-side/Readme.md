@@ -2,8 +2,6 @@
 
 In order to run the server you need to do a few things.
 
-First you need to edit the password for the admin client.
-
 Here is the config with the stuff you need to edit
 
 Server-Config.json
@@ -19,12 +17,6 @@ Server-Config.json
     }
 }
 ```
-
-Make a .env or edit .env.sample file outside of the server folder and the src folder.
-```
-PASSWORD=password
-```
-This is the password for the admin login.
 
 How to run the server
 

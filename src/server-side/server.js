@@ -11,6 +11,8 @@ const io = require("socket.io")(httpServer, {
 require('dotenv').config()
 const config = require("./server-config");
 const PORT = process.env.PORT || config.server.port;
+// get the regex from the bad_words.js file
+const bad_words = require("./bad_words");
 
 let users = {};
 let rooms = {};
@@ -40,8 +42,12 @@ function colors(color, text) {
 }
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/pages/index.html');
   });
+
+app.get('/chat', (req, res) => {
+    res.sendFile(__dirname + '/pages/chat.html');
+});
 
 io.on("connection", (socket) => {
     // basic user login
@@ -58,7 +64,7 @@ io.on("connection", (socket) => {
               socket.disconnect();
             });
           } else {
-            socket.broadcast.emit("message", `${name}(${socket.id}) joined the chat.`)
+            socket.to("lobby").emit("message", `${name} joined the chat.`)
             // when the join add them to the default room called "lobby"
             socket.join("lobby");
             socket.emit("message", `You have joined the lobby, you can create a room by typing /room <room-name>`);
@@ -82,6 +88,32 @@ io.on("connection", (socket) => {
 /password-room - sets a password for a room
 /credits - shows the credits
                     `);
+                    break;
+                case "nick":
+                    new_name = args.join(" ");
+                    // check all the users and if the new name is already taken, we send a message to the user
+                    for (let user in users) {
+                        if (users[user] == new_name) {
+                            socket.emit("message", `The name ${new_name} is already taken.`);
+                            return;
+                        }
+                    }
+                    if (new_name.length > 20) {
+                        socket.emit("message", "Your name is too long, please choose a shorter name.");
+                        return;
+                    }
+                    if (new_name.length < 3) {
+                        socket.emit("message", "Your name is too short, please choose a longer name.");
+                        return;
+                    }
+                    if (bad_words.test(new_name)) {
+                        socket.emit("message", "Your name contains bad words, please choose another name.");
+                        return;
+                    }
+                    old_name = users[socket.id];
+                    users[socket.id] = new_name;
+                    socket.emit("message", `Your name has been changed from ${old_name} to ${new_name}`);
+                    socket.to("lobby").emit("message", `${old_name} changed their name to ${new_name}`);
                     break;
                 case "credits":
                     socket.emit("message", "Simple Chat by @DeveloperJosh");
@@ -211,6 +243,15 @@ Rules:
                 }
             }
             if (room === undefined) {
+                /// if message has a bad_word, censor it //bad_words is a regex
+                if (bad_words.test(message)) {
+                    //message = message.replace(bad_words, "****");
+                    /// replace the word with * the same length as the word
+                    message = message.replace(bad_words, (match) => {
+                        return "*".repeat(match.length);
+                    });
+                }
+                /// send the message to everyone in the lobby
                 io.to("lobby").emit("message", `${users[socket.id]}: ${message}`);
             }
             else {
@@ -265,7 +306,7 @@ Rules:
     socket.on('disconnect', () => {
         /// check if user is in users
         if (users[socket.id] !== undefined) {
-          socket.broadcast.emit("message", `${users[socket.id]} left the chat.`);
+          socket.to("lobby").emit("message", `${users[socket.id]} left the chat.`);
           console.log("Disconnected: " + socket.id);
           console.log("-----------------------------------------------------");
           delete users[socket.id];
