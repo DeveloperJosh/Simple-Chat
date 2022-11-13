@@ -1,11 +1,10 @@
 {
-    "version": "v2.0",
+    "version": "v3.0",
     "name": "Simple Chat Server",
     "description": "A simple chat server, written in Js.",
     "server": {
         "port": 3000,
         "maxUsers": 90,
-        "maxVotes": 15,
-        "staffemoji": "♥️"
+        "maxVotes": 15
     }
 }
