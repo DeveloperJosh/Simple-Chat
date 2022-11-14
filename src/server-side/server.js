@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const httpServer = http.createServer(app);
+const rateLimit = require('express-rate-limit')
 const io = require("socket.io")(httpServer, {
     cors: {
         origin: "localhost:3000",
@@ -11,18 +12,12 @@ const io = require("socket.io")(httpServer, {
 require('dotenv').config()
 const config = require("./server-config");
 const PORT = process.env.PORT || config.server.port;
-// get the regex from the bad_words.js file
-const bad_words = require("./bad_words");
-
-const rateLimit = require('express-rate-limit')
 const limiter = rateLimit({
-	windowMs: 5 * 60 * 1000, // 15 minutes
-	max: 50, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+	windowMs: 5 * 60 * 1000,
+	max: 50,
+	standardHeaders: true,
+	legacyHeaders: false,
 })
-
-// apply rate limiter to all requests
 app.use(limiter);
 
 let users = {};
@@ -31,6 +26,7 @@ let room_owner = {};
 let room_passwords = {};
 let maxUsers = 90;
 let user_color = {};
+let bad_words = require("./bad_words.json");
 let color_ = {
   red: "\x1b[31m",
   green: "\x1b[32m",
@@ -265,11 +261,12 @@ Rules:
                 }
             }
             if (room === undefined) {
-                if (bad_words.test(message)) {
-                    message = message.replace(bad_words, (match) => {
-                        return "*".repeat(match.length);
-                    });
-                }
+
+                /// check message for bad words and replace them with *
+                for (let i = 0; i < bad_words.length; i++) {
+                    message = message.replace(bad_words[i], "*".repeat(bad_words[i].length));
+                } // end of for loop
+
                 if (message.replace(/\s/g, "").length === 0) {
                     return;
                 }
