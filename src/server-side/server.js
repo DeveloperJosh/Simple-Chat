@@ -14,6 +14,17 @@ const PORT = process.env.PORT || config.server.port;
 // get the regex from the bad_words.js file
 const bad_words = require("./bad_words");
 
+const rateLimit = require('express-rate-limit')
+const limiter = rateLimit({
+	windowMs: 5 * 60 * 1000, // 15 minutes
+	max: 50, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+// apply rate limiter to all requests
+app.use(limiter);
+
 let users = {};
 let rooms = {};
 let room_owner = {};
