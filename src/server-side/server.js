@@ -124,9 +124,12 @@ io.on("connection", (socket) => {
                         socket.emit("message", "Your name is too short, please choose a longer name.");
                         return;
                     }
-                    if (bad_words.test(new_name)) {
-                        socket.emit("message", "Your name contains bad words, please choose another name.");
-                        return;
+                    // check if the name is a bad word
+                    for (let word in bad_words) {
+                        if (new_name.toLowerCase().includes(bad_words[word])) {
+                            socket.emit("message", `Your name cannot contain the word ${bad_words[word]}.`);
+                            return;
+                        }
                     }
                     old_name = users[socket.id];
                     users[socket.id] = new_name;
