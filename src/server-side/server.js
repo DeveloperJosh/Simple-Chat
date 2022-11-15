@@ -276,11 +276,10 @@ Rules:
                 io.to("lobby").emit("message", `${users[socket.id]}: ${message}`);
             }
             else {
-                if (bad_words.test(message)) {
-                    message = message.replace(bad_words, (match) => {
-                        return "*".repeat(match.length);
-                    });
-                }
+                for (let i = 0; i < bad_words.length; i++) {
+                    message = message.replace(bad_words[i], "*".repeat(bad_words[i].length));
+                } // end of for loop
+
                 if (message.replace(/\s/g, "").length === 0) {
                     return;
                 }
