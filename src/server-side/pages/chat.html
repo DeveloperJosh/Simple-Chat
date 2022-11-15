@@ -82,7 +82,7 @@
             form.addEventListener('submit', function(e) {
 
                 // check how long the message is, if it is longer than 100 characters, do not send the message and do not clear the input box
-                if (input.value.length > 100) {
+                if (input.value.length > 2000) {
                     e.preventDefault();
                     alert("Message is too long");
                     return false;
