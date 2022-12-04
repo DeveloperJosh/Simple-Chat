@@ -27,26 +27,7 @@ let room_passwords = {};
 let maxUsers = 90;
 let user_color = {};
 let bad_words = require("./bad_words.json");
-let color_ = {
-  red: "\x1b[31m",
-  green: "\x1b[32m",
-  yellow: "\x1b[33m",
-  blue: "\x1b[34m",
-  magenta: "\x1b[35m",
-  cyan: "\x1b[36m",
-  white: "\x1b[37m"
-}
-
-/**
- * @param {string} Color You can pick blue, green, red, yellow, magenta, cyan, white
- * @param {string} Text you can put any text you want
- * @usage console.log(colors("blue", "Hello World"))
- */
-function colors(color, text) {
-  if (color in color_) {
-    return color_[color] + text + "\x1b[0m";
-  }
-}
+app.use(express.static(__dirname + '/pages/css'));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/pages/index.html');
@@ -54,6 +35,10 @@ app.get('/', (req, res) => {
 
 app.get('/chat', (req, res) => {
     res.sendFile(__dirname + '/pages/chat.html');
+});
+/// call endpoint
+app.get('/call', (req, res) => {
+    res.sendFile(__dirname + '/pages/call.html');
 });
 
 io.on("connection", (socket) => {
