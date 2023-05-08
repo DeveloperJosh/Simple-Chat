@@ -10,7 +10,7 @@ For deployment steps, see the [Deployment Guide](https://github.com/DeveloperJos
 
 ![](https://github.com/DeveloperJosh/Simple-Chat/blob/master/images/cmd_demo.gif)
 
-# Server Demo
+# Server Demo (Yes I know)
 ![](https://github.com/DeveloperJosh/Simple-Chat/blob/master/images/server_image.png)
 
 ## What we use
